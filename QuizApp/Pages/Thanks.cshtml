@@ -1,0 +1,17 @@
+@page
+@model ThanksModel
+@{
+    ViewData["Title"] = "Thank You";
+}
+
+<h2>Thanks!</h2>
+<p>Your responses have been saved.</p>
+@if (!string.IsNullOrWhiteSpace(Model.FilePath))
+{
+    <p><strong>File:</strong> @Model.FilePath</p>
+}
+
+<a class="btn btn-primary" href="/">Start Over</a>
+
+
+

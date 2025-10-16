@@ -1,0 +1,23 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Start Quiz";
+}
+
+<h1>Welcome to the Quiz</h1>
+<p>Please enter your name to begin.</p>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Username">Name</label>
+        <input id="Username" name="Username" class="form-control" value="@Model.Username" />
+        @if (!string.IsNullOrWhiteSpace(Model.Error))
+        {
+            <div class="text-danger" style="margin-top:6px">@Model.Error</div>
+        }
+    </div>
+    <button class="btn btn-primary" type="submit">Start Quiz</button>
+</form>
+
+
+
