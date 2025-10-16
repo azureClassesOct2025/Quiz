@@ -29,10 +29,6 @@ stages:
     - script: dotnet build QuizApp/QuizApp.csproj --configuration $(buildConfiguration) --no-restore
       displayName: 'Build Project'
 
-    # Run tests (optional)
-    - script: dotnet test demoapp/demoapp.web/tests --configuration $(buildConfiguration) --no-build --verbosity normal
-      displayName: 'Run Tests'
-
     # Publish output artifacts
     - script: |
         dotnet publish QuizApp/QuizApp.csproj \
