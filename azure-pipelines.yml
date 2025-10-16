@@ -22,8 +22,8 @@ stages:
         version: '6.x'
     
     # Restore NuGet packages
-    - script: dotnet restore https://github.com/azureClassesOct2025/Quiz/tree/master/QuizApp/QuizApp.csproj
-      displayName: 'Restore NuGet packages'
+    - script: dotnet restore /QuizApp/QuizApp.csproj
+      displayName: 'Restore NuGet packages-shashi'
 
     # Build the project
     - script: dotnet build https://github.com/azureClassesOct2025/Quiz/tree/master/QuizApp/QuizApp.csproj --configuration $(buildConfiguration) --no-restore
