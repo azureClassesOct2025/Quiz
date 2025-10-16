@@ -4,7 +4,7 @@ trigger:
       - master
 
 pool:
-  vmImage: 'ubuntu-latest'  # Linux agent
+  name: 'QuizAgentPool'
 
 variables:
   buildConfiguration: 'Release'
