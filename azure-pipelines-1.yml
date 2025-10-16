@@ -43,8 +43,9 @@ stages:
       displayName: Build an image
       inputs:
         command: build
+        repository: quizapp
         dockerfile: '**/Dockerfile'
         tags: |
-          $(tag)
-
+         latest
+         dockerfile: '**/Dockerfile'
 
