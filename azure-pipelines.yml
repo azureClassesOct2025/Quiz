@@ -22,11 +22,11 @@ stages:
         version: '6.x'
     
     # Restore NuGet packages
-    - script: dotnet restore VSProject/QuizApp/QuizApp.csproj
+    - script: dotnet restore Quiz/QuizApp/QuizApp.csproj
       displayName: 'Restore NuGet packages'
 
     # Build the project
-    - script: dotnet build VSProject/QuizApp/QuizApp.csproj --configuration $(buildConfiguration) --no-restore
+    - script: dotnet build Quiz/QuizApp/QuizApp.csproj --configuration $(buildConfiguration) --no-restore
       displayName: 'Build Project'
 
     # Run tests (optional)
@@ -35,7 +35,7 @@ stages:
 
     # Publish output artifacts
     - script: |
-        dotnet publish VSProject/QuizApp/QuizApp.csproj \
+        dotnet publish Quiz/QuizApp/QuizApp.csproj \
         # dotnet publish demoapp/demoapp.web/demoapp.web.csproj \
           --configuration $(buildConfiguration) \
           --output $(Build.ArtifactStagingDirectory)
