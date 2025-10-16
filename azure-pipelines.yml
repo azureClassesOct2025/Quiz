@@ -16,10 +16,10 @@ stages:
     steps:
     # Install .NET SDK
     - task: UseDotNet@2
-      displayName: 'Install .NET SDK'
+      displayName: 'Install .NET SDK 8.x'
       inputs:
         packageType: 'sdk'
-        version: '6.x'
+        version: '8.0.x'
     
     # Restore NuGet packages
     - script: dotnet restore **/*.csproj
