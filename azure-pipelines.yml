@@ -22,11 +22,11 @@ stages:
         version: '6.x'
     
     # Restore NuGet packages
-    - script: dotnet restore /QuizApp/QuizApp.csproj
+    - script: dotnet restore QuizApp/QuizApp.csproj
       displayName: 'Restore NuGet packages-shashi'
 
     # Build the project
-    - script: dotnet build https://github.com/azureClassesOct2025/Quiz/tree/master/QuizApp/QuizApp.csproj --configuration $(buildConfiguration) --no-restore
+    - script: dotnet build QuizApp/QuizApp.csproj --configuration $(buildConfiguration) --no-restore
       displayName: 'Build Project'
 
     # Run tests (optional)
@@ -35,7 +35,7 @@ stages:
 
     # Publish output artifacts
     - script: |
-        dotnet publish Quiz/QuizApp/QuizApp.csproj \
+        dotnet publish QuizApp/QuizApp.csproj \
         # dotnet publish demoapp/demoapp.web/demoapp.web.csproj \
           --configuration $(buildConfiguration) \
           --output $(Build.ArtifactStagingDirectory)
