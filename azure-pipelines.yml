@@ -35,7 +35,8 @@ stages:
 
     # Publish output artifacts
     - script: |
-        dotnet publish demoapp/demoapp.web/demoapp.web.csproj \
+        dotnet publish VSProject/QuizApp/QuizApp.csproj \
+        # dotnet publish demoapp/demoapp.web/demoapp.web.csproj \
           --configuration $(buildConfiguration) \
           --output $(Build.ArtifactStagingDirectory)
       displayName: 'Publish Artifacts'
