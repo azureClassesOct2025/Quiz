@@ -22,7 +22,7 @@ stages:
         version: '6.x'
     
     # Restore NuGet packages
-    - script: dotnet restore QuizApp/QuizApp.csproj
+    - script: dotnet restore **/*.csproj
       displayName: 'Restore NuGet packages-shashi'
 
     # Build the project
