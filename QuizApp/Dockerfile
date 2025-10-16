@@ -1,8 +1,10 @@
-# Use .NET 8 SDK image for build
+# =============================
+# 1️⃣ BUILD STAGE
+# =============================
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy csproj and restore dependencies
+# Copy only project file first (for efficient layer caching)
 COPY *.csproj ./
 RUN dotnet restore
 
@@ -10,8 +12,17 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release -o out
 
-# Use .NET 8 ASP.NET runtime for final image
+# =============================
+# 2️⃣ RUNTIME STAGE
+# =============================
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
+
+# Copy the published output from build stage
 COPY --from=build /app/out ./
+
+# Expose port 8080 (change if needed)
+EXPOSE 8080
+
+# Set the entry point
 ENTRYPOINT ["dotnet", "QuizApp.dll"]
