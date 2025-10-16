@@ -22,11 +22,11 @@ stages:
         version: '6.x'
     
     # Restore NuGet packages
-    - script: dotnet restore demoapp/demoapp.web/demoapp.web.csproj
+    - script: dotnet restore VSProject/QuizApp/QuizApp.csproj
       displayName: 'Restore NuGet packages'
 
     # Build the project
-    - script: dotnet build demoapp/demoapp.web/demoapp.web.csproj --configuration $(buildConfiguration) --no-restore
+    - script: dotnet build VSProject/QuizApp/QuizApp.csproj --configuration $(buildConfiguration) --no-restore
       displayName: 'Build Project'
 
     # Run tests (optional)
