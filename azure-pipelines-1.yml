@@ -44,7 +44,8 @@ stages:
       inputs:
         command: build
         repository: quizapp
+        dockerfile: QuizApp/Dockerfile
+        buildContext: QuizApp
         tags: |
          latest
-         dockerfile: '**/Dockerfile'
 
