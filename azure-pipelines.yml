@@ -1,34 +1,48 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
 trigger:
-- master
+  branches:
+    include:
+      - master
 
 pool:
-  name: 'QuizAgentPool'
+  vmImage: 'ubuntu-latest'  # Linux agent
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    steps:
+    # Install .NET SDK
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        packageType: 'sdk'
+        version: '6.x'
+    
+    # Restore NuGet packages
+    - script: dotnet restore demoapp/demoapp.web/demoapp.web.csproj
+      displayName: 'Restore NuGet packages'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    # Build the project
+    - script: dotnet build demoapp/demoapp.web/demoapp.web.csproj --configuration $(buildConfiguration) --no-restore
+      displayName: 'Build Project'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    # Run tests (optional)
+    - script: dotnet test demoapp/demoapp.web/tests --configuration $(buildConfiguration) --no-build --verbosity normal
+      displayName: 'Run Tests'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    # Publish output artifacts
+    - script: |
+        dotnet publish demoapp/demoapp.web/demoapp.web.csproj \
+          --configuration $(buildConfiguration) \
+          --output $(Build.ArtifactStagingDirectory)
+      displayName: 'Publish Artifacts'
+
+    # Publish artifacts to pipeline
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
