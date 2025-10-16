@@ -32,9 +32,8 @@ stages:
     # Publish output artifacts
     - script: |
         dotnet publish QuizApp/QuizApp.csproj \
-        # dotnet publish demoapp/demoapp.web/demoapp.web.csproj \
-          --configuration $(buildConfiguration) \
-          --output $(Build.ArtifactStagingDirectory)
+        --configuration Release \
+        --output $(Build.ArtifactStagingDirectory)
       displayName: 'Publish Artifacts'
 
     # Publish artifacts to pipeline
@@ -43,3 +42,4 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+
