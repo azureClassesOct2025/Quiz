@@ -1,0 +1,5 @@
+C:\Users\Shashi\OneDrive\Desktop\VSProject\QuizApp\publish\QuizApp.exe
+C:\Users\Shashi\OneDrive\Desktop\VSProject\QuizApp\publish\QuizApp.dll
+C:\Users\Shashi\OneDrive\Desktop\VSProject\QuizApp\publish\QuizApp.deps.json
+C:\Users\Shashi\OneDrive\Desktop\VSProject\QuizApp\publish\QuizApp.runtimeconfig.json
+C:\Users\Shashi\OneDrive\Desktop\VSProject\QuizApp\publish\QuizApp.pdb
