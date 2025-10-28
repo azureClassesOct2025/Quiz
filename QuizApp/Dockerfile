@@ -1,44 +1,17 @@
-trigger:
-- master
+# Use the official .NET 8 SDK image for building
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
 
-pool:
-  vmImage: 'ubuntu-latest'
+# Copy the project file and restore dependencies
+COPY QuizApp.csproj .
+RUN dotnet restore
 
-variables:
-  imageName: 'quizapp'
-  tag: '$(Build.BuildId)'
+# Copy everything else and build
+COPY . .
+RUN dotnet publish -c Release -o out
 
-stages:
-- stage: Build
-  displayName: Build Docker Image
-  jobs:
-  - job: Build
-    displayName: Build and Publish Docker Image
-    steps:
-
-    # 1️⃣ Checkout source
-    - checkout: self
-
-    # 2️⃣ Build the Docker image
-    - task: Docker@2
-      displayName: Build Docker Image
-      inputs:
-        command: build
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(imageName):$(tag)
-    
-    # 3️⃣ (Optional) Push to ACR or Docker Hub
-    # - task: Docker@2
-    #   displayName: Push Docker Image
-    #   inputs:
-    #     command: push
-    #     tags: |
-    #       $(imageName):$(tag)
-
-    # 4️⃣ Publish the Dockerfile (and other files) as pipeline artifact
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Dockerfile Artifact'
-      inputs:
-        targetPath: '$(Build.SourcesDirectory)/Dockerfile'
-        artifact: 'dockerfile'
+# Use the .NET 8 runtime image for running the app
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/out .
+ENTRYPOINT ["dotnet", "QuizApp.dll"]
