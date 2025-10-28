@@ -10,13 +10,12 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the project file and restore dependencies
-# COPY QuizApp.csproj .
-COPY QuizApp/QuizApp.csproj .
+COPY QuizApp.csproj .
 RUN dotnet restore
 
-# Copy everything else and build
+# Copy everything else and build the project
 COPY . .
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out /m:1
 
 # Use the .NET 8 runtime image for running the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
