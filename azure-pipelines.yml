@@ -25,14 +25,30 @@ stages:
         dotnet publish QuizApp/QuizApp.csproj -c Release -o $(Build.ArtifactStagingDirectory)/publish
       displayName: 'Build and publish project'
 
-    # ✅ Copy Dockerfile to artifact folder
     - script: |
         cp QuizApp/Dockerfile $(Build.ArtifactStagingDirectory)/
       displayName: 'Copy Dockerfile to artifact folder'
 
-    # ✅ Publish artifact (includes build + Dockerfile)
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
+
+- stage: Docker
+  displayName: Build and Push Docker Image
+  dependsOn: Build
+  jobs:
+  - job: Docker
+    displayName: Build and Push Docker Image
+    steps:
+    - task: Docker@2
+      displayName: Build and Push to ACR
+      inputs:
+        command: buildAndPush
+        repository: $(imageName)
+        dockerfile: 'QuizApp/Dockerfile'
+        containerRegistry: 'MyACRServiceConnection'  # replace with your ACR connection name
+        tags: |
+          latest
+          $(tag)
