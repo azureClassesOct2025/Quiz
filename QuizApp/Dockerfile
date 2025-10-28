@@ -10,7 +10,8 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the project file and restore dependencies
-COPY QuizApp.csproj .
+# COPY QuizApp.csproj .
+COPY QuizApp/QuizApp.csproj
 RUN dotnet restore
 
 # Copy everything else and build
