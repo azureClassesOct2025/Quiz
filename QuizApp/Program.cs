@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
 builder.Services.AddRazorPages();
 builder.Services.AddSession(options =>
 {
