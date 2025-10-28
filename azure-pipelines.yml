@@ -1,29 +1,38 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
 - master
 
-resources:
-- repo: self
+pool:
+  vmImage: 'ubuntu-latest'
 
 variables:
+  imageName: 'quizapp'
   tag: '$(Build.BuildId)'
 
 stages:
 - stage: Build
-  displayName: Build image
+  displayName: Build and Publish
   jobs:
   - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
+    displayName: Build .NET and publish artifact
     steps:
-    - task: Docker@2
-      displayName: Build an image
+    - task: UseDotNet@2
       inputs:
-        command: build
-        dockerfile: '**/Dockerfile'
-        tags: |
-          $(tag)
+        packageType: 'sdk'
+        version: '8.0.x'
+
+    - script: |
+        dotnet restore QuizApp/QuizApp.csproj
+        dotnet publish QuizApp/QuizApp.csproj -c Release -o $(Build.ArtifactStagingDirectory)/publish
+      displayName: 'Build and publish project'
+
+    # ✅ Copy Dockerfile to artifact folder
+    - script: |
+        cp QuizApp/Dockerfile $(Build.ArtifactStagingDirectory)/
+      displayName: 'Copy Dockerfile to artifact folder'
+
+    # ✅ Publish artifact (includes build + Dockerfile)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
