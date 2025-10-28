@@ -13,12 +13,12 @@ WORKDIR /app
 COPY QuizApp.csproj .
 RUN dotnet restore
 
-# Copy everything else and build the project
-COPY . .
+# Copy everything else and build the app
+COPY . ./
 RUN dotnet publish -c Release -o out /m:1
 
 # Use the .NET 8 runtime image for running the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=build /app/out ./
 ENTRYPOINT ["dotnet", "QuizApp.dll"]
