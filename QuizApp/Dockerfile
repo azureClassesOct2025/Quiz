@@ -11,7 +11,7 @@ WORKDIR /app
 
 # Copy the project file and restore dependencies
 # COPY QuizApp.csproj .
-COPY QuizApp/QuizApp.csproj
+COPY QuizApp/QuizApp.csproj .
 RUN dotnet restore
 
 # Copy everything else and build
