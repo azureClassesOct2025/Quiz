@@ -36,3 +36,4 @@ if [ "$DOCKER" = "true" ]; then
 fi
 
 echo "Build completed successfully!"
+
