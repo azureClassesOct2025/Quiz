@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy csproj and restore dependencies
-COPY ["QuizApp/QuizApp.csproj", "QuizApp/"]
+COPY QuizApp/QuizApp.csproj QuizApp/
 RUN dotnet restore "QuizApp/QuizApp.csproj"
 
 # Copy all project files
