@@ -13,7 +13,7 @@ stages:
   displayName: Build and Publish
   jobs:
   - job: Build
-    displayName: Build .NET and publish artifact
+    displayName: Build .NET and build Docker image
     steps:
     - task: UseDotNet@2
       inputs:
@@ -25,25 +25,16 @@ stages:
         dotnet publish QuizApp/QuizApp.csproj -c Release -o $(Build.ArtifactStagingDirectory)/publish
       displayName: 'Build and publish project'
 
+    # ✅ Build the Docker image (no push)
     - script: |
-        cp QuizApp/Dockerfile $(Build.ArtifactStagingDirectory)/
-      displayName: 'Copy Dockerfile to artifact folder'
+        echo "Building Docker image locally..."
+        docker build -t $(imageName):$(tag) -f QuizApp/Dockerfile QuizApp
+        docker images | grep $(imageName)
+      displayName: 'Build Docker image'
 
+    # ✅ Publish artifacts (optional)
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-
-- stage: Docker
-  displayName: Build Docker Image
-  dependsOn: Build
-  jobs:
-  - job: Docker
-    displayName: Build Docker Image
-    steps:
-    - script: |
-        echo "Building Docker image locally..."
-        docker build -t $(imageName):$(tag) -f QuizApp/Dockerfile .
-        docker images | grep $(imageName)
-      displayName: 'Build Docker image'
