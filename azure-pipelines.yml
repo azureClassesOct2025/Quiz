@@ -36,19 +36,14 @@ stages:
         publishLocation: 'Container'
 
 - stage: Docker
-  displayName: Build and Push Docker Image
+  displayName: Build Docker Image
   dependsOn: Build
   jobs:
   - job: Docker
-    displayName: Build and Push Docker Image
+    displayName: Build Docker Image
     steps:
-    - task: Docker@2
-      displayName: Build and Push to ACR
-      inputs:
-        command: buildAndPush
-        repository: $(imageName)
-        dockerfile: 'QuizApp/Dockerfile'
-        containerRegistry: 'MyACRServiceConnection'  # replace with your ACR connection name
-        tags: |
-          latest
-          $(tag)
+    - script: |
+        echo "Building Docker image locally..."
+        docker build -t $(imageName):$(tag) -f QuizApp/Dockerfile .
+        docker images | grep $(imageName)
+      displayName: 'Build Docker image'
