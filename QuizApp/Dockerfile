@@ -1,31 +1,24 @@
-# Use the official .NET 8.0 runtime as the base image
+
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 5000
 EXPOSE 5001
 
 # Use the official .NET 8.0 SDK for building
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+WORKDIR /app
 
 # Copy the project file and restore dependencies
-COPY ["QuizApp.csproj", "./"]
-RUN dotnet restore "QuizApp.csproj"
+COPY QuizApp.csproj .
+RUN dotnet restore
 
-# Copy the rest of the source code
+# Copy everything else and build
 COPY . .
+RUN dotnet publish -c Release -o out
 
-# Build the application
-RUN dotnet build "QuizApp.csproj" -c Release -o /app/build
-
-# Publish the application
-FROM build AS publish
-RUN dotnet publish "QuizApp.csproj" -c Release -o /app/publish /p:UseAppHost=false
-
-# Create the final runtime image
-FROM base AS final
+# Use the .NET 8 runtime image for running the app
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=publish /app/publish .
-
-# Set the entry point
+COPY --from=build /app/out .
 ENTRYPOINT ["dotnet", "QuizApp.dll"]
